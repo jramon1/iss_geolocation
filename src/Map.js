@@ -1,44 +1,36 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import _ from "lodash";
+import React from "react";
+import { compose, withProps } from "recompose";
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker
+} from "react-google-maps";
 
 
+const MyMapComponent = compose(
+  withProps({
+    googleMapURL:
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places",
+    loadingElement: <div style={{ height: `100%` }} />,
+    containerElement: <div style={{ height: `400px` }} />,
+    mapElement: <div style={{ height: `100%` }} />
+  }),
+  withScriptjs,
+  withGoogleMap
+)(props => (
 
-export class Map extends React.Component {
+  <GoogleMap defaultZoom={8} defaultCenter={{ lat: props.latitude, lng: props.longitude }}>
+    <Marker position={{ lat: props.latitude, lng: props.longitude }} />
+  </GoogleMap>
+));
 
-  //Since our component is based upon Google's api, way to be confident our component has changed
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.google !== this.props.google) {
-      this.loadMap();
-    }
-  }
-  loadMap() {
-    if (this.props && this.props.google) {
-      // google is available
-      const {google} = this.props;
-      const maps = google.maps;
+const enhance = _.identity;
 
-      const mapRef = this.refs.map;
-      const node = ReactDOM.findDOMNode(mapRef);
 
-      let zoom = 14;
-      let lat = this.props.latitude;
-      let lng = this.props.latitude;
-      const center = new maps.LatLng(lat, lng);
-      const mapConfig = Object.assign({}, {
-        center: center,
-        zoom: zoom
-      })
-      this.map = new maps.Map(node, mapConfig);
-    }
-  }
-  render() {
-    return (
-      <div ref='map'>
-        Loading map...
-      </div>
-    )
-  }
-}
+const ReactGoogleMaps = (props) => [
+  <MyMapComponent key="map" passedProps={props} />
+];
 
-export default Map
-　 　 　
+export default enhance(ReactGoogleMaps);

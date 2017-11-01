@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DisplayWindow from './DisplayWindow'
 import axios from 'axios';
-import GoogleMap from './Component'
+import Map from './map'
 import './App.css';
 
 class App extends Component {
@@ -50,9 +50,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      <GoogleMap latitude={this.state.latitude} longitude={this.state.longitude} />
+
       <span>{this.state.latitude}</span>
       <span>{this.state.longitude}</span>
+      <Map latitude={this.state.latitude} longitude={this.state.longitude} />
       </div>
     );
   }
