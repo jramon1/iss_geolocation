@@ -9,7 +9,8 @@ class App extends Component {
     super();
     this.state = {
       latitude: 0,
-      longitude: 0
+      longitude: 0,
+      countrycode: ""
     }
     this.displayLocation = this.displayLocation.bind(this);
   }
@@ -24,12 +25,34 @@ class App extends Component {
       const long = response.data.iss_position.longitude;
 
       console.log(lat, long);
+    // concat a new array with both long and lat
+    const location = [{lat}, {long}];
+
+    let locations = location.map(() => {
+      return axios({
+        url: `http://api.geonames.org/countryCode?lat=${lat}&lng=${long}&username=jramonibz` // <- team url
+      })
+    })
+
+    axios.all(locations)
+         .then((results) => {
+          console.log(results.data);
+          const country = results.data;
+          this.setState({
+            countrycode: country
+          });
+
+         })
+         .catch(error => {
+            console.log(error);
+          });
+
+
       this.setState({
         latitude: lat,
         longitude: long
       });
 
-      console.log("yo check dis out,-->", this.state.latitude);
     })
     .catch(error => {
       console.log(error);
@@ -50,10 +73,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-
+      <Map latitude={this.state.latitude} longitude={this.state.longitude} />
       <span>{this.state.latitude}</span>
       <span>{this.state.longitude}</span>
-      <Map latitude={this.state.latitude} longitude={this.state.longitude} />
+      <h2> The international Space Station is currently visible from: {this.state.countrycode}</h2>
       </div>
     );
   }
