@@ -21,8 +21,8 @@ const MyMapComponent = compose(
   withGoogleMap
 )(props => (
 
-  <GoogleMap defaultZoom={8} defaultCenter={{ lat: props.latitude, lng: props.longitude }}>
-    <Marker position={{ lat: props.latitude, lng: props.longitude }} />
+  <GoogleMap defaultZoom={8} defaultCenter={{ lat: props.passedProps.latitude, lng: props.passedProps.longitude }}>
+    <Marker position={{ lat: props.passedProps.latitude, lng: props.passedProps.longitude }} />
   </GoogleMap>
 ));
 
